@@ -14,6 +14,7 @@ Year	Top3Orders
 2014	67305 Southwest 2014-03-01 130907.05, 69531 France 2014-03-31 126514.99
 */
 
+----------------------------------------------------------------------------------------------------------------------
 
 -- Solution 1
 
@@ -58,52 +59,24 @@ STUFF((SELECT  ', ' + cast(SalesOrderID as varchar(10))+ ' '+ Name, ' ' +
 from temp t
 order by Year;
 
+----------------------------------------------------------------------------------------------------------------------
 
-with temp as
-(select year(OrderDate) Year, Name, SalesOrderID, OrderDate, TotalDue,    
-rank() over (partition by year(OrderDate) order by TotalDue desc) 
-Position 
-from Sales.SalesOrderHeader sh join Sales.SalesTerritory st on sh.TerritoryID = st.TerritoryID)
-SELECT      temp.Year,
-STRING_AGG( cast(temp.SalesOrderID as varchar)
-+ ' '
-+ Name
-+ ' '
-+ cast(cast(temp.OrderDate AS date) as varchar)
-+ ' '
-+ cast(cast(TotalDue as decimal(9, 2)) as varchar), ',  ')    as Top2Orders
-FROM temp
-WHERE Position IN (1,2)
-GROUP BY Year
-ORDER BY Year;
-
-
-with temp as
-(select year(OrderDate) Year, Name, SalesOrderID, OrderDate, TotalDue, 
-	rank() over (partition by year(OrderDate) order by TotalDue desc) 
-Position 
-	from Sales.SalesOrderHeader sh 
-	join Sales.SalesTerritory st 
-	on sh.TerritoryID = st.TerritoryID)
-select Year,
-STUFF((SELECT  ', ' + cast(SalesOrderID as varchar(10))+ ' '+ Name, ' ' + 
-cast(cast(OrderDate as date) as char(10))+ ' '+ 
-cast(cast(TotalDue as decimal(9, 2)) as varchar)
-       FROM temp t1      
-	   WHERE t1.year = t.year and Position <=2     
-	   FOR XML PATH('')) , 1, 2, '') AS Top3Orders
-	   from temp t
-	   order by Year;
-
-
-
-
-
+-- Part 1 (1 point)
+/* We have to use either GROUP BY or DISTINCT in the above solutions to get the report.
+   Please explain WHY in details. */
 --As we are using ranking over the whole data and it is partitioned by years it needs to be grouped by the years so that we can pick top two of the occurances in one row
 --If we dont use distinct there would be multiple occrances of each year with the same row so there would be repeating occurances. 
---To get only tyhe distinct occurances and avoid redundant data we use Distinct
+--To get only the distinct occurances and avoid redundant data we use Distinct
 
 
+----------------------------------------------------------------------------------------------------------------------
+
+
+-- Part 2 (2 points)
+
+/* Modify Solution 2 above so that we don't need to use DISTINCT but
+   can create the same report. */
+   
 with temp as
 (select year(OrderDate) Year, Name, SalesOrderID, OrderDate, TotalDue,
 	    rank() over (partition by year(OrderDate) order by TotalDue desc) Position
@@ -123,6 +96,20 @@ group by Year
 order by Year
 ;
 
+----------------------------------------------------------------------------------------------------------------------
+
+
+-- Question 2 (2 points)
+
+/* Use the content of an AdventureWorks database. Write a query 
+   that returns the following columns.
+       1) Territory ID
+       2) Territory Name
+       3) Total order count of the territory
+	   4) Highest single order value of the territory
+	   5) Highest total product quantity of a single order for the territory
+
+   Sort the returned data by the territory ID. */
 
 
 select st.TerritoryID, st.Name as TerritoryName, count(soh.SalesOrderID) as TotalOrderCount, 
@@ -133,3 +120,4 @@ join Sales.SalesTerritory st on soh.TerritoryID = st.TerritoryID
 group by st.TerritoryID, st.Name
 order by st.TerritoryID;
 
+----------------------------------------------------------------------------------------------------------------------
