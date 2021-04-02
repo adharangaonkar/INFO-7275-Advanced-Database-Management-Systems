@@ -1,0 +1,26 @@
+.App{
+  background-size: cover;
+  background-image: url("https://images.squarespace-cdn.com/content/v1/58efc216197aea0b0dbdd20e/1548363053583-1DKHHUZP0UYDH7732GCH/ke17ZwdGBToddI8pDm48kNBhxsR5AixTPaSt36FQjZRZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PIHEpb-MmdDNvFVgjmeoENIlexef176In2EgYPtI8R2-8KMshLAGzx4R3EDFOm1kBS/BlueBackground.jpg?format=1000w");
+  background-repeat: no-repeat;
+  height: 100vh;
+}
+.app_body{
+  padding: 30px;
+}
+
+.EMbed-container{
+  border: none;
+  height: 78vh;
+  /* width: 90vw; */  
+}
+
+.app_input{
+  display: flex;
+  align-items: center;
+  width: 50vw;
+}
+
+.app__predictionTable{
+  width: 30vw;
+  margin-top: 10px;
+}
