@@ -1,0 +1,38 @@
+FOR a in airports
+filter a.state == "NY" && a.vip == true
+collect with count into count
+return count
+
+
+
+FOR airport, flight IN ANY
+'airports/BIS' flights
+FILTER flight.Month == 1
+AND flight.Day >= 5
+AND flight.Day <= 7
+RETURN { city: airport.city,
+time: flight.ArrTimeUTC }
+
+// Exercise B//
+
+FOR flight IN flights
+FILTER flight.FlightNum == 860 && flight.Month == 1 && flight.Day == 5
+RETURN {Origin: flight._from, Destination : flight._to}
+
+
+FOR airport, flight IN ANY
+'airports/JFK' flights
+FILTER flight.FlightNum in [860, 859]
+RETURN {airport : airport.name, flightnum : flight.FlightNum}
+
+
+FOR orig IN airports
+FILTER orig._key IN ["JFK", "PBI"]
+FOR dest, flight IN
+OUTBOUND orig flights
+FILTER flight.FlightNum IN [859,860]
+RETURN { from: orig.name, to: dest.name, number: flight.FlightNum, day: flight.Day } 
+
+
+
+
