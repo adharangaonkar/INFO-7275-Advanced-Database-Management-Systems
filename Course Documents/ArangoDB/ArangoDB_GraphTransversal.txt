@@ -35,4 +35,30 @@ RETURN { from: orig.name, to: dest.name, number: flight.FlightNum, day: flight.D
 
 
 
+//Tranversal Options - Hands on
+
+FOR airport IN OUTBOUND 'airports/LAX' flights
+OPTIONS { bfs: true, uniqueVertices: 'global' }
+RETURN airport
+
+
+FOR airport IN OUTBOUND 'airports/LAX' flights
+RETURN DISTINCT airport
+
+
+//Shortest Path - Hands on
+
+FOR v IN OUTBOUND
+SHORTEST_PATH 'airports/BIS'
+TO 'airports/JFK' flights
+RETURN v.name
+
+
+LET airports = (
+FOR v IN OUTBOUND
+SHORTEST_PATH 'airports/BIS'
+TO 'airports/JFK' flights
+RETURN v
+)
+RETURN LENGTH(airports) - 1
 
